@@ -16,6 +16,10 @@ class Animation
     Animation();
     int setup(unsigned int height, unsigned int width, unsigned int loops);
     void loop();
+    char *white();
+    char *black();
+    char *rgb(int r, int g, int b);
+    char *hsv(int h, int s, int v);
 };
 
 #endif
