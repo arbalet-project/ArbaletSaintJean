@@ -2,7 +2,7 @@
 #define ANIMATION_H
 
 
-/** Classe mètre Animation
+/** Classe mère Animation
 
     Toutes les animations doivent hériter de cette classe mère, s'inspirer de l'exemple vide
     Les mots clés virtual et =0 permettent de forcer les créateurs d'animation à créer une fonction du même nom
