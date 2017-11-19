@@ -70,36 +70,41 @@ class AnimationLaguerre : public Animation {
             // Les paramètres d'entrée et de sortie de cette méthode doivent 
             //    correspondre avec l'interface dans Animation.h
 	    
-            
-            for (int i = 0 ; i < 13 ; i++){
-		for (int j = 0 ; j < 13 ; j++){
-			PIXELS[i+1][j+3] = rgb(pacManClosed[i][j]*255, pacManClosed[i][j]*255, 0);
-			//delay(250);
-		}
-	    }
+	    for(int posX = 0 ; posX < WIDTH ; posX++){
+
+		    for (int i = 0 ; i < 13 ; i++){
+			    for (int j = 0 ; j < 13 ; j++){
+				    PIXELS[i+1][j+posX] = rgb(pacManClosed[i][j]*255, pacManClosed[i][j]*255, 0);
+				    //delay(250);
+			    }
+	        }
 	
-            for (int i = 0 ; i < 13 ; i++){
-		for (int j = 0 ; j < 13 ; j++){
-			PIXELS[i+1][j+3] = rgb(pacManMidOpen[i][j]*255, pacManMidOpen[i][j]*255, 0);
-			//delay(250);
-		}
-	    }	
+	        for (int i = 0 ; i < 13 ; i++){
+			    for (int j = 0 ; j < 13 ; j++){
+				    PIXELS[i+1][j+posX] = rgb(pacManMidOpen[i][j]*255, pacManMidOpen[i][j]*255, 0);
+				    //delay(250);
+			    }
+	        }	
 
-	    for (int i = 0 ; i < 13 ; i++){
-		for (int j = 0 ; j < 13 ; j++){
-			PIXELS[i+1][j+3] = rgb(pacManOpen[i][j]*255, pacManOpen[i][j]*255, 0);
-			//delay(250);
-		}
-	    }	
+	        for (int i = 0 ; i < 13 ; i++){
+			    for (int j = 0 ; j < 13 ; j++){
+				    PIXELS[i+1][j+posX] = rgb(pacManOpen[i][j]*255, pacManOpen[i][j]*255, 0);
+				    //delay(250);
+			    }
+	        }	
 
-	    for (int i = 0 ; i < 13 ; i++){
-		for (int j = 0 ; j < 13 ; j++){
-			PIXELS[i+1][j+3] = rgb(pacManMidOpen[i][j]*255, pacManMidOpen[i][j]*255, 0);
-			//delay(250);
-		}
-	    }	
-			
+	        for (int i = 0 ; i < 13 ; i++){
+			    for (int j = 0 ; j < 13 ; j++){
+				    PIXELS[i+1][j+posX] = rgb(pacManMidOpen[i][j]*255, pacManMidOpen[i][j]*255, 0);
+				    //delay(250);
+			    }
+	        }
+
         }
+            
+            	
+			
+    }
 
     private:
         // J'ai le droit d'ajouter des méthodes privées ici pour

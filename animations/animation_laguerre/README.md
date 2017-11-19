@@ -3,10 +3,10 @@
 Ceci est la documentation de mon animation, je décris dans ce document au format [Markdown](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet) ce qu'elle fait et comment elle marche.
 
 ## A quoi ressemble mon animation
-TODO
+Pacman animé (TODO : Faire avancer et rajouter fantome)
 
 ## Comment fonctionne son code
-TODO
+Dessin de tableau de booleens a chaque tour de boucle
 
 ## Comment on pourra interagir avec
-TODO
+N/A
