@@ -11,6 +11,7 @@
 
 /* Pour faire simple on inclue tous les ficheirs de code (directement les .cpp) des animations ici */
 #include <animations/animation_vide/animation_vide.cpp>
+#include <animations/animation_vide/animation_laguerre.cpp>
 
 
 

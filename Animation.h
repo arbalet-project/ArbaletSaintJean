@@ -18,7 +18,7 @@ class Animation
     void loop();
     char *white();
     char *black();
-    char *rgb(int r, int g, int b);
+    unsigned char *rgb(int r, int g, int b);
     char *hsv(int h, int s, int v);
 };
 

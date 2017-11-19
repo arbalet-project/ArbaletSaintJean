@@ -32,8 +32,8 @@ char *Animation::black(){
         return ret;
 }
 
-char *Animation::rgb(int r, int g, int b){
-	char ret[3] = {r, g, b};
+unsigned char *Animation::rgb(int r, int g, int b){
+	unsigned char ret[3] = {r, g, b};
 	return ret;
 }
 
