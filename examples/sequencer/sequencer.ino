@@ -57,16 +57,16 @@ void setup() {
     PIXELS = (uint8_t***)malloc(20*15*3);
     reset(PIXELS);
     //AnimationVide *animation_vide = new AnimationVide();   // Déclaration de l'animation et allocation de la mémoire avec le mot-clé "new" (allocation obligatoire avec un pointeur)
-	AnimationBands *animation_bands =  new AnimationBands();
-	Animations[NBAPP] = animation_bands;
-	NBAPP += 1;
-	AnimationLaguerre *animation_laguerre = new AnimationLaguerre();
-	Animations[NBAPP] = animation_laguerre;
-	NBAPP += 1;
+    AnimationBands *animation_bands =  new AnimationBands();
+    Animations[NBAPP] = animation_bands;
+    NBAPP += 1;
+    AnimationLaguerre *animation_laguerre = new AnimationLaguerre();
+    Animations[NBAPP] = animation_laguerre;
+    NBAPP += 1;
     for(int i = 0; i < NBAPP; i++){
       Animations[i] -> setup(15,20,100);
     }
-	strip.begin();
+    strip.begin();
 }
 
 
