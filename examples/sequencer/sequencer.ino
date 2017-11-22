@@ -16,6 +16,7 @@
 
 /* Pour faire simple on inclue tous les ficheirs de code (directement les .cpp) des animations ici */
 #include <animations/animation_vide/animation_vide.cpp>
+#include <animations/animation_vide/animation_bands.cpp>
 #include <animations/animation_laguerre/animation_laguerre.cpp>
 
 uint8_t dataPin  = 2;    // Yellow wire on Adafruit Pixels
@@ -29,6 +30,7 @@ Adafruit_WS2801 strip = Adafruit_WS2801(20, dataPin, clockPin);
 **************/
 uint8_t WIDTH=20;   // Largeur en nombre de pixels
 uint8_t HEIGHT=15;  // Hauteur en nombre de pixels
+uint8_t NBAPP = 0;
 uint8_t*** PIXELS;    // Les couleurs RGB ou HSV de chaque pixel (attention : mémoire à allouer au démarrage)
 
 const int NBRE_ANIMATIONS = 2;
@@ -58,7 +60,10 @@ void setup() {
     // Aide à la prise en main des pointeurs ci-dessous, code à supprimer, mettre dans un tableau de pointeurs sur des animations, etc
     PIXELS = (uint8_t***)malloc(20*15*3);
     reset(PIXELS);
-    AnimationVide *animation_vide = new AnimationVide();   // Déclaration de l'animation et allocation de la mémoire avec le mot-clé "new" (allocation obligatoire avec un pointeur)
+    AnimationBands *animation_bands =  new AnimationBands();
+    Animations[NBAPP++] = animation_bands;
+    AnimationLaguerre *animation_laguerre = new AnimationLaguerre();
+    Animations[NBAPP++] = animation_laguerre;
     courrante = 0;
     tours = Animations[0]->setup(15,20,100);
     strip.begin();
