@@ -71,13 +71,13 @@ void setup() {
 
 
 void loop() {
-	if(tours < 0){ // Donner le tour à la prochaine animation
-		reset(PIXELS);
-		++courrante;
-		if(courrante >= NBRE_ANIMATIONS){
-			courrante = 0;
-		}
-		tours = Animations[courrante]->setup(15,20,100);
+    if(tours < 0){ // Donner le tour à la prochaine animation
+        reset(PIXELS);
+        ++courrante;
+        if(courrante >= NBRE_ANIMATIONS){
+            courrante = 0;
+        }
+        tours = Animations[courrante]->setup(15,20,100);
     }
 
     // C'est le loop() du séquenceur, aucun code d'animation ne va ici
@@ -87,10 +87,10 @@ void loop() {
     
     int i;
     for(int x = 0; x < 15; ++x){
-		for(int y = 0; y < 20; ++y){
-			i = x * 15 + y;
-			strip.setPixelColor(i, Color((byte)PIXELS[x][y][0], (byte)PIXELS[x][y][1], (byte)PIXELS[x][y][2]));
-		}
+        for(int y = 0; y < 20; ++y){
+            i = x * 15 + y;
+            strip.setPixelColor(i, Color((byte)PIXELS[x][y][0], (byte)PIXELS[x][y][1], (byte)PIXELS[x][y][2]));
+        }
     }
     strip.show();
     delay(100);
