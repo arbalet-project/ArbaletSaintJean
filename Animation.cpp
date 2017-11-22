@@ -32,6 +32,21 @@ char *Animation::black(){
         return ret;
 }
 
+char *Animation::red(){
+	char ret[3] = {255, 0, 0};
+        return ret;
+}
+
+char *Animation::green(){
+	char ret[3] = {0, 255, 0};
+        return ret;
+}
+
+char *Animation::blue(){
+	char ret[3] = {0, 0, 0};
+        return ret;
+}
+
 unsigned char *Animation::rgb(int r, int g, int b){
 	unsigned char ret[3] = {r, g, b};
 	return ret;
