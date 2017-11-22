@@ -149,11 +149,11 @@ class AnimationLaguerre : public Animation {
             for (int i = 0 ; i < 13 ; i++){
 			    for (int j = 0 ; j < 14 ; j++){
                     switch(tab[i][j]){
-                        case 1 : PIXELS[i+1][j+posX-14-2] = rgb(255, 0, 0);
+                        case 1 : PIXELS[i+1][j+posX-14-2] = red();
                                  break;
-                        case 2 : PIXELS[i+1][j+posX-14-2] = rgb(255, 255, 255);
+                        case 2 : PIXELS[i+1][j+posX-14-2] = white();
                                  break;
-                        case 3 : PIXELS[i+1][j+posX-14-2] = rgb(0, 0, 255);
+                        case 3 : PIXELS[i+1][j+posX-14-2] = blue();
                                  break;
                     }
 			    }
