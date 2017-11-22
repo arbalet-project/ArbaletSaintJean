@@ -31,7 +31,11 @@ uint8_t WIDTH=20;   // Largeur en nombre de pixels
 uint8_t HEIGHT=15;  // Hauteur en nombre de pixels
 uint8_t*** PIXELS;    // Les couleurs RGB ou HSV de chaque pixel (attention : mémoire à allouer au démarrage)
 
-Animation *Animations[12];
+const int NBRE_ANIMATIONS = 2;
+
+Animation *Animations[NBRE_ANIMATIONS];
+int courrante;
+int tours;
 
 void reset(uint8_t*** tab){
   for(int i = 0; i < WIDTH; i++){
@@ -55,19 +59,26 @@ void setup() {
     PIXELS = (uint8_t***)malloc(20*15*3);
     reset(PIXELS);
     AnimationVide *animation_vide = new AnimationVide();   // Déclaration de l'animation et allocation de la mémoire avec le mot-clé "new" (allocation obligatoire avec un pointeur)
-    for(int i = 0; i < 1; i++){
-      Animations[i] -> setup(15,20,100);
-    }
+    courrante = 0;
+    tours = Animations[0]->setup(15,20,100);
     strip.begin();
 }
 
 
 void loop() {
+	if(tours < 0){ // Donner le tour à la prochaine animation
+		reset(PIXELS);
+		++courrante;
+		if(courrante >= NBRE_ANIMATIONS){
+			courrante = 0;
+		}
+		tours = Animations[courrante]->setup(15,20,100);
+    }
+
     // C'est le loop() du séquenceur, aucun code d'animation ne va ici
     // TODO : appeler le loop de l'animation courante, ou bien changer d'animation
-    for( int i = 0; i < 1; i++){
-		Animations[i]->loop();
-    }
+    Animation[courrante]->loop();
+    --tours;
     
     int i;
     for(int x = 0; x < 15; ++x){
