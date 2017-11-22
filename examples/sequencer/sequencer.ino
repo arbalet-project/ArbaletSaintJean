@@ -8,12 +8,20 @@
    Toutes les animations (classes filles) vont hériter de cette classe mère. */ 
 #include <Animation.h>
 
+#include "Adafruit_WS2801.h"
+#include "SPI.h" // Comment out this line if using Trinket or Gemma
+#ifdef __AVR_ATtiny85__
+#include <avr/power.h>
+#endif
 
 /* Pour faire simple on inclue tous les ficheirs de code (directement les .cpp) des animations ici */
 #include <animations/animation_vide/animation_vide.cpp>
 #include <animations/animation_laguerre/animation_laguerre.cpp>
 
+uint8_t dataPin  = 2;    // Yellow wire on Adafruit Pixels
+uint8_t clockPin = 3;    // Green wire on Adafruit Pixels
 
+Adafruit_WS2801 strip = Adafruit_WS2801(20, dataPin, clockPin);
 
 /************* Variables globales 
   Attention, ces variables sont globales à tout le microcontrôleur, si les noms sont triviaux il
@@ -50,6 +58,7 @@ void setup() {
     for(int i = 0; i < 1; i++){
       Animations[i] -> setup(15,20,100);
     }
+    strip.begin();
 }
 
 
@@ -57,6 +66,28 @@ void loop() {
     // C'est le loop() du séquenceur, aucun code d'animation ne va ici
     // TODO : appeler le loop de l'animation courante, ou bien changer d'animation
     for( int i = 0; i < 1; i++){
-      Animations[i]->loop();
+		Animations[i]->loop();
     }
+    
+    int i;
+    for(int x = 0; x < 15; ++x){
+		for(int y = 0; y < 20; ++y){
+			i = x * 15 + y;
+			strip.setPixelColor(i, Color((byte)PIXELS[x][y][0], (byte)PIXELS[x][y][1], (byte)PIXELS[x][y][2]));
+		}
+    }
+    strip.show();
+    delay(100);
+}
+
+// Create a 24 bit color value from R,G,B
+uint32_t Color(byte r, byte g, byte b)
+{
+  uint32_t c;
+  c = r;
+  c <<= 8;
+  c |= g;
+  c <<= 8;
+  c |= b;
+  return c;
 }
