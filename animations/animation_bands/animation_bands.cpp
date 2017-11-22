@@ -116,7 +116,7 @@ class AnimationBands : public Animation
          
         void whitePoint(int posY, int posX)
         {
-			PIXELS[posY][posX]=rgb(255,255,255);
+			PIXELS[posY][posX]=white();
 			
             switch (dir)
             {
