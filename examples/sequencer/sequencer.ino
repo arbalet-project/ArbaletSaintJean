@@ -14,10 +14,7 @@
 #include <avr/power.h>
 #endif
 
-/* Pour faire simple on inclue tous les ficheirs de code (directement les .cpp) des animations ici */
-#include <animations/animation_vide/animation_vide.cpp>
-#include <animations/animation_vide/animation_bands.cpp>
-#include <animations/animation_laguerre/animation_laguerre.cpp>
+
 
 uint8_t dataPin  = 2;    // Yellow wire on Adafruit Pixels
 uint8_t clockPin = 3;    // Green wire on Adafruit Pixels
@@ -32,6 +29,11 @@ uint8_t WIDTH=20;   // Largeur en nombre de pixels
 uint8_t HEIGHT=15;  // Hauteur en nombre de pixels
 uint8_t NBAPP = 0;
 char*** PIXELS;    // Les couleurs RGB ou HSV de chaque pixel (attention : mémoire à allouer au démarrage)
+
+/* Pour faire simple on inclue tous les ficheirs de code (directement les .cpp) des animations ici */
+#include <animations/animation_vide/animation_vide.cpp>
+#include <animations/animation_bands/animation_bands.cpp>
+#include <animations/animation_laguerre/animation_laguerre.cpp>
 
 const int NBRE_ANIMATIONS = 2;
 
