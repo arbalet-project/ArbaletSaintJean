@@ -84,7 +84,7 @@ void loop() {
 
     // C'est le loop() du séquenceur, aucun code d'animation ne va ici
     // TODO : appeler le loop de l'animation courante, ou bien changer d'animation
-    Animation[courrante]->loop();
+    Animations[courrante]->loop();
     --tours;
     
     int i;
