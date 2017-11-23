@@ -67,6 +67,7 @@ void setup() {
     courrante = 0;
     tours = Animations[0]->setup(15,20,100);
     strip.begin();
+    Serial.begin(9600);
 }
 
 
@@ -89,9 +90,13 @@ void loop() {
     for(int x = 0; x < 15; ++x){
         for(int y = 0; y < 20; ++y){
             i = x * 15 + y;
+            Serial.print(Color((byte)PIXELS[x][y][0], (byte)PIXELS[x][y][1], (byte)PIXELS[x][y][2]));
+            Serial.print(" ");
             strip.setPixelColor(i, Color((byte)PIXELS[x][y][0], (byte)PIXELS[x][y][1], (byte)PIXELS[x][y][2]));
         }
+        Serial.println();
     }
+    Serial.println("\n");
     strip.show();
     delay(100);
 }
