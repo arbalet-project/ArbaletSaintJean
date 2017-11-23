@@ -136,7 +136,7 @@ class AnimationLaguerre : public Animation {
 
     private:
 
-        void drawPacMan(int tab[13][13], int posX){
+        void drawPacMan(bool tab[13][13], int posX){
             for (int i = 0 ; i < 13 ; i++){
                 for (int j = 0 ; j < 13 ; j++){
                     PIXELS[i+1][j+posX] = rgb(tab[i][j]*255, tab[i][j]*255, 0);
@@ -144,7 +144,7 @@ class AnimationLaguerre : public Animation {
             }
         }
         
-        void drawGhost(int tab[13][14], int posX){
+        void drawGhost(unsigned char tab[13][14], int posX){
             for (int i = 0 ; i < 13 ; i++){
                 for (int j = 0 ; j < 14 ; j++){
                     switch(tab[i][j]){
