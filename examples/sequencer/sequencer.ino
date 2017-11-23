@@ -31,7 +31,7 @@ Adafruit_WS2801 strip = Adafruit_WS2801(20, dataPin, clockPin);
 uint8_t WIDTH=20;   // Largeur en nombre de pixels
 uint8_t HEIGHT=15;  // Hauteur en nombre de pixels
 uint8_t NBAPP = 0;
-uint8_t*** PIXELS;    // Les couleurs RGB ou HSV de chaque pixel (attention : mémoire à allouer au démarrage)
+char*** PIXELS;    // Les couleurs RGB ou HSV de chaque pixel (attention : mémoire à allouer au démarrage)
 
 const int NBRE_ANIMATIONS = 2;
 
@@ -39,7 +39,7 @@ Animation *Animations[NBRE_ANIMATIONS];
 int courrante;
 int tours;
 
-void reset(uint8_t*** tab){
+void reset(char*** tab){
   for(int i = 0; i < WIDTH; i++){
     for(int j = 0; j < HEIGHT; j++){
       for(int c = 0; c < 3; c++){
