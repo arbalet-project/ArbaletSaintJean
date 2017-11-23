@@ -7,7 +7,7 @@ using namespace std;
 class AnimationLaguerre : public Animation {
 
     public: 
-        int pacManClosed[13][13] = {
+        bool pacManClosed[13][13] = {
 	        {0,0,0,0,1,1,1,1,1,0,0,0,0},
 	        {0,0,1,1,1,1,1,1,1,1,1,0,0},
 	        {0,1,1,1,1,1,1,1,1,1,1,1,0},
@@ -23,7 +23,7 @@ class AnimationLaguerre : public Animation {
 	        {0,0,0,0,1,1,1,1,1,0,0,0,0}
 		};
 
-        int pacManMidOpen[13][13] = {
+        bool pacManMidOpen[13][13] = {
 	        {0,0,0,0,1,1,1,1,1,0,0,0,0},
 	        {0,0,1,1,1,1,1,1,1,1,1,0,0},
 	        {0,1,1,1,1,1,1,1,1,1,1,1,0},
@@ -39,7 +39,7 @@ class AnimationLaguerre : public Animation {
 	        {0,0,0,0,1,1,1,1,1,0,0,0,0}
         };
         
-        int pacManOpen[13][13] = {
+        bool pacManOpen[13][13] = {
 	        {0,0,0,0,1,1,1,1,1,0,0,0,0},
 	        {0,0,1,1,1,1,1,1,1,0,0,0,0},
 	        {0,1,1,1,1,1,1,1,0,0,0,0,0},
@@ -55,7 +55,7 @@ class AnimationLaguerre : public Animation {
 	        {0,0,0,0,1,1,1,1,1,0,0,0,0}
 		};
 
-        int ghostOne[13][14] = {
+        unsigned char ghostOne[13][14] = {
             {0,0,0,0,0,1,1,1,1,0,0,0,0,0},
             {0,0,0,1,1,1,1,1,1,1,1,0,0,0},
             {0,0,1,1,1,1,1,1,1,1,1,1,0,0},
@@ -71,7 +71,7 @@ class AnimationLaguerre : public Animation {
             {1,0,0,0,1,1,0,0,1,1,0,0,0,1}
         };
 
-        int ghostTwo[13][14] = {
+		unsigned char ghostTwo[13][14] = {
             {0,0,0,0,0,1,1,1,1,0,0,0,0,0},
             {0,0,0,1,1,1,1,1,1,1,1,0,0,0},
             {0,0,1,1,1,1,1,1,1,1,1,1,0,0},
@@ -87,7 +87,7 @@ class AnimationLaguerre : public Animation {
             {0,1,1,0,0,0,1,1,0,0,0,1,1,0}
         };
 
-        int ghostDead[13][14] = {
+		unsigned char ghostDead[13][14] = {
             {0,0,0,0,0,1,1,1,1,0,0,0,0,0},
             {0,0,0,1,1,1,1,1,1,1,1,0,0,0},
             {0,0,1,1,1,1,1,1,1,1,1,1,0,0},
