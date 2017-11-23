@@ -47,8 +47,8 @@ char *Animation::blue(){
         return ret;
 }
 
-unsigned char *Animation::rgb(int r, int g, int b){
-	unsigned char ret[3] = {r, g, b};
+char *Animation::rgb(int r, int g, int b){
+	char ret[3] = {r, g, b};
 	return ret;
 }
 

@@ -21,7 +21,7 @@ class Animation
     char *red();
     char *green();
     char *blue();
-    unsigned char *rgb(int r, int g, int b);
+    char *rgb(int r, int g, int b);
     char *hsv(int h, int s, int v);
 };
 

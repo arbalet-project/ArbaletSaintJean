@@ -4,7 +4,6 @@
 #define ANIMATION_LAGUERRE
 
 using namespace std;
-
 class AnimationLaguerre : public Animation {
 
     public: 

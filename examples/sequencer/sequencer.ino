@@ -58,7 +58,7 @@ void setup() {
     // TODO : allouer la mémoire des pixels, instancier la bilbiothèque Adafruit, déclarer les animations, appeler leur setup ...
     
     // Aide à la prise en main des pointeurs ci-dessous, code à supprimer, mettre dans un tableau de pointeurs sur des animations, etc
-    PIXELS = (uint8_t***)malloc(20*15*3);
+    PIXELS = (char***)malloc(20*15*3);
     reset(PIXELS);
     AnimationBands *animation_bands =  new AnimationBands();
     Animations[NBAPP++] = animation_bands;
