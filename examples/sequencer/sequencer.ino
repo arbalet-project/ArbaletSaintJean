@@ -14,11 +14,6 @@
 #include <avr/power.h>
 #endif
 
-/* Pour faire simple on inclue tous les ficheirs de code (directement les .cpp) des animations ici */
-#include <animations/animation_vide/animation_vide.cpp>
-#include <animations/animation_vide/animation_bands.cpp>
-#include <animations/animation_laguerre/animation_laguerre.cpp>
-
 uint8_t dataPin  = 2;    // Yellow wire on Adafruit Pixels
 uint8_t clockPin = 3;    // Green wire on Adafruit Pixels
 
@@ -31,7 +26,12 @@ Adafruit_WS2801 strip = Adafruit_WS2801(20, dataPin, clockPin);
 uint8_t WIDTH=20;   // Largeur en nombre de pixels
 uint8_t HEIGHT=15;  // Hauteur en nombre de pixels
 uint8_t NBAPP = 0;
-uint8_t*** PIXELS;    // Les couleurs RGB ou HSV de chaque pixel (attention : mémoire à allouer au démarrage)
+char*** PIXELS;    // Les couleurs RGB ou HSV de chaque pixel (attention : mémoire à allouer au démarrage)
+
+/* Pour faire simple on inclue tous les ficheirs de code (directement les .cpp) des animations ici */
+#include <animations/animation_vide/animation_vide.cpp>
+#include <animations/animation_bands/animation_bands.cpp>
+#include <animations/animation_laguerre/animation_laguerre.cpp>
 
 const int NBRE_ANIMATIONS = 2;
 
@@ -39,7 +39,7 @@ Animation *Animations[NBRE_ANIMATIONS];
 int courrante;
 int tours;
 
-void reset(uint8_t*** tab){
+void reset(char*** tab){
   for(int i = 0; i < WIDTH; i++){
     for(int j = 0; j < HEIGHT; j++){
       for(int c = 0; c < 3; c++){
@@ -82,7 +82,7 @@ void loop() {
 
     // C'est le loop() du séquenceur, aucun code d'animation ne va ici
     // TODO : appeler le loop de l'animation courante, ou bien changer d'animation
-    Animation[courrante]->loop();
+    Animations[courrante]->loop();
     --tours;
     
     int i;
