@@ -14,8 +14,6 @@
 #include <avr/power.h>
 #endif
 
-
-
 uint8_t dataPin  = 2;    // Yellow wire on Adafruit Pixels
 uint8_t clockPin = 3;    // Green wire on Adafruit Pixels
 
