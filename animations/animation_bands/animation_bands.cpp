@@ -19,15 +19,11 @@ class AnimationBands : public Animation
         int cptN;
         int cptTot;
         int cptIni; 
-        int wid;
-        int heig;
         
 
         int setup(int height, int width, int loops) 
         {
             dir = 'e';
-            wid = width;
-            heig = height;
             posY = 0;
             posX= 0;
             cptE = 0;
@@ -47,10 +43,9 @@ class AnimationBands : public Animation
 
         void bands(int posY, int posX, char dir, int width, int height)
         {
-            switch (dir)
-            {
-                if(cptIni == cptTot) // Euh ya pas de case vous êtes sûrs de ce que vous faites ?
+	    if(cptIni == cptTot) // Euh ya pas de case vous êtes sûrs de ce que vous faites ?
                 {
+		    eteindre();
                     dir = 'e';
                     posY = 0;
                     posX= 0;
@@ -63,35 +58,38 @@ class AnimationBands : public Animation
                 {
                     cptIni++;
                 }
+            switch (dir)
+            {
+                
             case 'e':
-                if(posX == (width - cptE) && posY == (0+cptE))
+                if(posX == (width - cptE) && posY == (0+cptE))// Si t'es au coin a droite
                 {
-                    whitePoint(posY, posX);
+                    whitePoint(posY, posX); // Tu colories la LED en blanche
                 } else
                 {
-                    PIXELS[posY][posX]= blue();
-                    posX++;
+                    PIXELS[posY][posX]= blue(); //Sinon tu colories en bleu
+                    posX++; //augmente le compteur des abscisses
                 }
                 break;
              
             case 's':
-                if(posX == (width - cptS) && posY == (height - cptS))
+                if(posX == (width - cptS) && posY == (height - cptS)) // Si t'es au coin inférieur droit
                 {
-                    whitePoint(posY, posX);
+                    whitePoint(posY, posX); // Tu colories la LED en blanche
                 } else
                 {
-                    PIXELS[posY][posX] = blue();
-                    posY++;
+                    PIXELS[posY][posX] = blue(); // Sinon Tu colories les LEDs en bleu
+                    posY++;// Tu augmentes le compteur des ordonnées
                 }
                 break;
              
             case 'w':
-                if(posX == (0 + cptW) && posY == (height - cptW))
+                if(posX == (0 + cptW) && posY == (height - cptW)) // Si t'es au coin inférieur gauche
                 {
                     whitePoint(posY, posX);
                 } else
                 {
-                    PIXELS[posY][posX]= red();
+                    PIXELS[posY][posX]= red(); // Sinon tu colories les LEDs en rouge
                     posX--;
                 }
                 break;
@@ -102,13 +100,12 @@ class AnimationBands : public Animation
                     whitePoint(posY, posX);
                 } else
                 {
-                    PIXELS[posY][posX]= rgb(255,255,0);
+                    PIXELS[posY][posX]= rgb(255,255,0); // Sinon tu colories les LEDs en jaune
                     posY--;
                 }
                 break;
              
             default:
-                ;
                 break;
              
             }
@@ -116,40 +113,50 @@ class AnimationBands : public Animation
          
         void whitePoint(int posY, int posX)
         {
-            PIXELS[posY][posX]=white();
+            PIXELS[posY][posX]=white(); //On colorie la LEDs en blanche
 			
             switch (dir)
             {
-            case 'e':
-                dir = 's';
-                posY++;
-                cptE++;
+            case 'e': // si on était dirigé vers l'est alors
+                dir = 's'; // On se dirige au sud
+                posY++; // On avance d'une LED pour ne pas écraser la couleur blanche
+                cptE++; // On incrément le compteur est pour ne pas créer de conflit en arrivant au centre du paneau d'affichage
                 break;
             
-            case 's':
+            case 's'://De même
                 dir = 'w';
                 posX--;
                 cptS++;
                 break;
              
-            case 'w':
+            case 'w'://De même
                 dir = 'n';
                 posY--;
                 cptW++;
                 break;
              
-            case 'n':
+            case 'n'://De même
                 dir = 'e';
                 posX++;
                 cptN++;
                 break;
              
-            default:
-                ;
+            default:// Si defaut alors rien
                 break;
              
            }
         }
+
+	void eteindre() {
+	for(int l = 0; l<width; l++){//Ligne
+		for (int c=0; c<height;c++){//Colonne
+			PIXELS[l][c]= rgb(0,0,0);// on éteint la LED a la position l et c
+		}
+	}	
+
+	}
+
+
 };
 
 
