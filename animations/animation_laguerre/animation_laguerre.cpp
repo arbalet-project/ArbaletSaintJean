@@ -71,7 +71,7 @@ class AnimationLaguerre : public Animation {
             {1,0,0,0,1,1,0,0,1,1,0,0,0,1}
         };
 
-		unsigned char ghostTwo[13][14] = {
+	unsigned char ghostTwo[13][14] = {
             {0,0,0,0,0,1,1,1,1,0,0,0,0,0},
             {0,0,0,1,1,1,1,1,1,1,1,0,0,0},
             {0,0,1,1,1,1,1,1,1,1,1,1,0,0},
@@ -87,7 +87,7 @@ class AnimationLaguerre : public Animation {
             {0,1,1,0,0,0,1,1,0,0,0,1,1,0}
         };
 
-		unsigned char ghostDead[13][14] = {
+	unsigned char ghostDead[13][14] = {
             {0,0,0,0,0,1,1,1,1,0,0,0,0,0},
             {0,0,0,1,1,1,1,1,1,1,1,0,0,0},
             {0,0,1,1,1,1,1,1,1,1,1,1,0,0},
