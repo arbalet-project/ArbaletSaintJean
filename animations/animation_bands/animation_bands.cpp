@@ -21,7 +21,7 @@ class AnimationBands : public Animation
         int cptIni; 
         
 
-        int setup(int height, int width, int loops) 
+        int setup(int HEIGHT, int WIDTH, int loops) 
         {
             dir = 'e';
             posY = 0;
@@ -30,7 +30,7 @@ class AnimationBands : public Animation
             cptS = 0;
             cptW = 0;
             cptN = 0;
-            cptTot = height * width;
+            cptTot =  HEIGHT * WIDTH;
             cptIni = 0;  
         }
         
@@ -41,9 +41,9 @@ class AnimationBands : public Animation
 
     private:
 
-        void bands(int posY, int posX, char dir, int width, int height)
+        void bands(int posY, int posX, char dir, int WIDTH, int HEIGHT)
         {
-	    if(cptIni == cptTot) // Euh ya pas de case vous êtes sûrs de ce que vous faites ?
+	    if(cptIni == cptTot)
                 {
 		    eteindre();
                     dir = 'e';
@@ -62,7 +62,7 @@ class AnimationBands : public Animation
             {
                 
             case 'e':
-                if(posX == (width - cptE) && posY == (0+cptE))// Si t'es au coin a droite
+                if(posX == (WIDTH - cptE) && posY == (0+cptE))// Si t'es au coin a droite
                 {
                     whitePoint(posY, posX); // Tu colories la LED en blanche
                 } else
@@ -73,7 +73,7 @@ class AnimationBands : public Animation
                 break;
              
             case 's':
-                if(posX == (width - cptS) && posY == (height - cptS)) // Si t'es au coin inférieur droit
+                if(posX == (WIDTH - cptS) && posY == (HEIGHT - cptS)) // Si t'es au coin inférieur droit
                 {
                     whitePoint(posY, posX); // Tu colories la LED en blanche
                 } else
@@ -84,7 +84,7 @@ class AnimationBands : public Animation
                 break;
              
             case 'w':
-                if(posX == (0 + cptW) && posY == (height - cptW)) // Si t'es au coin inférieur gauche
+                if(posX == (0 + cptW) && posY == (HEIGHT - cptW)) // Si t'es au coin inférieur gauche
                 {
                     whitePoint(posY, posX);
                 } else
