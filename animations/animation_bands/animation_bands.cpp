@@ -36,7 +36,7 @@ class AnimationBands : public Animation
         
         void loop() 
         {
-            bands(posY, posX, dir, wid, heig);
+            bands(posY, posX, dir, WIDTH, HEIGHT);
         }
 
     private:
@@ -148,8 +148,8 @@ class AnimationBands : public Animation
         }
 
 	void eteindre() {
-	for(int l = 0; l<width; l++){//Ligne
-		for (int c=0; c<height;c++){//Colonne
+	for(int l = 0; l<WIDTH; l++){//Ligne
+		for (int c=0; c<HEIGHT;c++){//Colonne
 			PIXELS[l][c]= rgb(0,0,0);// on éteint la LED a la position l et c
 		}
 	}	
