@@ -104,32 +104,30 @@ class AnimationLaguerre : public Animation {
         };
 
         AnimationLaguerre() {
-            // Le constructeur. Si j'ai des valeurs par défaut à donner aux variables membres, c'est ici
+            
         }
 
         int setup(int height, int width, int loops) {
-            // Les paramètres d'entrée et de sortie de cette méthode doivent 
-            //    correspondre avec l'interface dans Animation.h
+           
 
 	    }
 
         void loop() {
-            // Les paramètres d'entrée et de sortie de cette méthode doivent 
-            //    correspondre avec l'interface dans Animation.h
+   
 	    
 	        for(int posX = 0 ; posX < WIDTH ; posX++){
                 drawPacMan(pacManClosed,   posX);
                 drawGhost(ghostOne,        posX);
-                //delay(125);                
+                delay(125);                
                 drawPacMan(pacManMidOpen,  posX);
                 drawGhost(ghostTwo,        posX);	
-                //delay(125);
+                delay(125);
                 drawPacMan(pacManOpen,     posX);
                 drawGhost(ghostOne,        posX);	            
-                //delay(125);
+                delay(125);
                 drawPacMan(pacManMidOpen,  posX);
                 drawGhost(ghostTwo,        posX);                
-                //delay(125);
+                delay(125);
             }
         }
 
@@ -140,6 +138,7 @@ class AnimationLaguerre : public Animation {
             for (int i = 0 ; i < 13 ; i++){
                 for (int j = 0 ; j < 13 ; j++){
                     PIXELS[i+1][j+posX] = rgb(tab[i][j]*255, tab[i][j]*255, 0);
+		    PIXELS[i+1][j+posX-1] = 0;
                 }
             }
         }
@@ -149,10 +148,13 @@ class AnimationLaguerre : public Animation {
                 for (int j = 0 ; j < 14 ; j++){
                     switch(tab[i][j]){
                         case 1 : PIXELS[i+1][j+posX-14-2] = red();
+		    		 PIXELS[i+1][j+posX-1] = 0;
                                  break;
                         case 2 : PIXELS[i+1][j+posX-14-2] = white();
+		    		 PIXELS[i+1][j+posX-1] = 0;
                                  break;
                         case 3 : PIXELS[i+1][j+posX-14-2] = blue();
+		    		 PIXELS[i+1][j+posX-1] = 0;   
                                  break;
                     }
                 }
@@ -160,8 +162,6 @@ class AnimationLaguerre : public Animation {
         }    
 
 
-        // J'ai le droit d'ajouter des méthodes privées ici pour
-        //   découper correctement mon code.
 };
 
 #endif
