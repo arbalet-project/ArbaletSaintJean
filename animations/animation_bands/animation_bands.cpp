@@ -37,6 +37,7 @@ class AnimationBands : public Animation
         void loop() 
         {
             bands(posY, posX, dir, WIDTH, HEIGHT);
+	    delay(400);
         }
 
     private:
