@@ -1,13 +1,46 @@
 #include <Animation.h>
 
-#ifndef ANIMATION_LAGUERRE
-#define ANIMATION_LAGUERRE
+#ifndef ANIMATION_PACMAN
+#define ANIMATION_PACMAN
 
 using namespace std;
-class AnimationLaguerre : public Animation {
+class AnimationPacman : public Animation {
 
     public: 
-        bool pacManClosed[13][13] = {
+        
+
+        AnimationPacman() {
+            
+        }
+
+        int setup(int height, int width, int loops) {
+           
+
+	    }
+
+        void loop() {
+		
+	    
+	        for(int posX = 0 ; posX < WIDTH ; posX++){
+                drawPacMan(pacManClosed,   posX);
+                drawGhost(ghostOne,        posX);
+                delay(125);                
+                drawPacMan(pacManMidOpen,  posX);
+                drawGhost(ghostTwo,        posX);	
+                delay(125);
+                drawPacMan(pacManOpen,     posX);
+                drawGhost(ghostOne,        posX);	            
+                delay(125);
+                drawPacMan(pacManMidOpen,  posX);
+                drawGhost(ghostTwo,        posX);                
+                delay(125);
+            }
+        }
+
+
+    private:
+	
+		bool pacManClosed[13][13] = {
 	        {0,0,0,0,1,1,1,1,1,0,0,0,0},
 	        {0,0,1,1,1,1,1,1,1,1,1,0,0},
 	        {0,1,1,1,1,1,1,1,1,1,1,1,0},
@@ -71,7 +104,7 @@ class AnimationLaguerre : public Animation {
             {1,0,0,0,1,1,0,0,1,1,0,0,0,1}
         };
 
-	unsigned char ghostTwo[13][14] = {
+		unsigned char ghostTwo[13][14] = {
             {0,0,0,0,0,1,1,1,1,0,0,0,0,0},
             {0,0,0,1,1,1,1,1,1,1,1,0,0,0},
             {0,0,1,1,1,1,1,1,1,1,1,1,0,0},
@@ -87,7 +120,7 @@ class AnimationLaguerre : public Animation {
             {0,1,1,0,0,0,1,1,0,0,0,1,1,0}
         };
 
-	unsigned char ghostDead[13][14] = {
+		unsigned char ghostDead[13][14] = {
             {0,0,0,0,0,1,1,1,1,0,0,0,0,0},
             {0,0,0,1,1,1,1,1,1,1,1,0,0,0},
             {0,0,1,1,1,1,1,1,1,1,1,1,0,0},
@@ -102,37 +135,6 @@ class AnimationLaguerre : public Animation {
             {1,1,0,1,1,1,0,0,1,1,1,0,1,1},
             {1,0,0,0,1,1,0,0,1,1,0,0,0,1}
         };
-
-        AnimationLaguerre() {
-            
-        }
-
-        int setup(int height, int width, int loops) {
-           
-
-	    }
-
-        void loop() {
-   
-	    
-	        for(int posX = 0 ; posX < WIDTH ; posX++){
-                drawPacMan(pacManClosed,   posX);
-                drawGhost(ghostOne,        posX);
-                delay(125);                
-                drawPacMan(pacManMidOpen,  posX);
-                drawGhost(ghostTwo,        posX);	
-                delay(125);
-                drawPacMan(pacManOpen,     posX);
-                drawGhost(ghostOne,        posX);	            
-                delay(125);
-                drawPacMan(pacManMidOpen,  posX);
-                drawGhost(ghostTwo,        posX);                
-                delay(125);
-            }
-        }
-
-
-    private:
 
         void drawPacMan(bool tab[13][13], int posX){
             for (int i = 0 ; i < 13 ; i++){
