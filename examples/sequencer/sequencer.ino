@@ -52,8 +52,8 @@ void setup() {
     //reset(PIXELS);
     /*AnimationBands *animation_bands =  new AnimationBands();
     Animations[NBAPP++] = animation_bands;
-    AnimationLaguerre *animation_laguerre = new AnimationLaguerre();
-    Animations[NBAPP++] = animation_laguerre;
+    AnimationPacman *animation_pacman = new AnimationPacman();
+    Animations[NBAPP++] = animation_pacman;
     courrante = 0;
     tours = Animations[0]->setup(15,20,100);
     strip.begin();*/
