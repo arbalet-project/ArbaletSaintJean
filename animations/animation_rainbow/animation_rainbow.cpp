@@ -49,7 +49,7 @@ class AnimationRainbow : public Animation {
 
         int height;
         int width;
-        int delta;
+        double delta;
 
 };
 
