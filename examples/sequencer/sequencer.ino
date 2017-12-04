@@ -26,6 +26,7 @@ char*** PIXELS;    // Les couleurs RGB ou HSV de chaque pixel (attention : mémo
 #include <animations/animation_vide/animation_vide.cpp>
 #include <animations/animation_bands/animation_bands.cpp>
 #include <animations/animation_pacman/animation_pacman.cpp>
+#include <animations/animation_rainbow/animation_rainbow.cpp>
 
 const int NBRE_ANIMATIONS = 1;
 
