@@ -11,7 +11,8 @@ unsigned long debut;
 // PARAMETRES
 int vitesseVariations = 2500;
 int proportionCouleur = 5;
-int multiplicateur = 2;
+int multiplicateur = 10;
+int translateur = 30;
 
 void setup(){
   strip.begin();
@@ -26,18 +27,18 @@ void setup(){
 }
 
 void loop(){
-  int temps = sin((millis() - debut)/float(vitesseVariations)) * multiplicateur + multiplicateur+10;
+  int temps = sin((millis() - debut)/float(vitesseVariations)) * multiplicateur + translateur;
   for(int i = 0; i < 300; ++i){
     uint32_t color = strip.getPixelColor(i) >> 16;
     uint32_t c = color + (sens[i] ? 1 : -1) * random(0, color/proportionCouleur+temps);
-    if(c > 250){
+    if(c > 240){
       sens[i] = false;
-      c = 250;
-    }else if(c < 10){
+      c = 240;
+    }else if(c < 20){
       sens[i] = true;
-      c = 10;
+      c = 20;
     }
-    strip.setPixelColor(i, c, c, c+100 < 255 ? c+100 : 255);
+    strip.setPixelColor(i, c, c, c+80 < 255 ? c+80 : 255);
   }
   strip.show();
 }
