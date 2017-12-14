@@ -6,6 +6,12 @@
 Adafruit_WS2801 strip = Adafruit_WS2801(300);
 
 boolean sens[300]; 
+unsigned long debut;
+
+// PARAMETRES
+int vitesseVariations = 2500;
+int proportionCouleur = 5;
+int multiplicateur = 2;
 
 void setup(){
   strip.begin();
@@ -16,12 +22,14 @@ void setup(){
     sens[i] = random(0, 2) == 0;
   }
   strip.show();
+  debut = millis();
 }
 
 void loop(){
+  int temps = sin((millis() - debut)/float(vitesseVariations)) * multiplicateur + multiplicateur+10;
   for(int i = 0; i < 300; ++i){
     uint32_t color = strip.getPixelColor(i) >> 16;
-    uint32_t c = color + (sens[i] ? 1 : -1) * random(0, color/5+5);
+    uint32_t c = color + (sens[i] ? 1 : -1) * random(0, color/proportionCouleur+temps);
     if(c > 250){
       sens[i] = false;
       c = 250;
@@ -32,7 +40,6 @@ void loop(){
     strip.setPixelColor(i, c, c, c+100 < 255 ? c+100 : 255);
   }
   strip.show();
-  delay(20);
 }
 
 // Create a 24 bit color value from R,G,B
