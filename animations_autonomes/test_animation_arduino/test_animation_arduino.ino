@@ -1,10 +1,57 @@
+
 #include "SPI.h"
 #include <Adafruit_WS2801.h>
 
 // Set the first variable to the NUMBER of pixels in a row and
 // the second value to number of pixels in a column.
 Adafruit_WS2801 strip = Adafruit_WS2801(300);
+int reverseTab[15][20];
 
+void initialiser_revser_tab_coin_bas_droit(){ // fonctionne
+    for(int i = 14; i > -1; i--){
+        for(int j = 19; j > -1; j--){
+            if(i % 2 == 0){
+                reverseTab[i][j] = (14 - i) * 20 + (19 - j);
+            }else{
+                reverseTab[i][j] = (14 -i) * 20 + j;
+            }
+        }
+    }
+}
+void initialiser_revser_tab_coin_bas_gauche(){   // fonctionne
+    for(int i = 14; i > -1; i--){
+        for(int j = 19; j > -1; j--){
+            if(i % 2 == 0){
+                reverseTab[i][j] = (14 - i) * 20 +  j;
+            }else{
+                reverseTab[i][j] = (14 - i) * 20 + (19 - j);
+            }
+        }
+    }
+}
+void initialiser_revser_tab_coin_haut_gauche(){
+    for(int i = 0; i < 15; i++){
+        for(int j = 0; j < 20; j++)
+            if(i % 2 == 0){
+                reverseTab[i][j] = i * 20 + j;
+            }else{
+                reverseTab[i][j] = i * 20 + (19 - j);
+            }
+    }
+}
+void initialiser_revser_tab_coin_haut_droit(){
+    for(int i = 0; i < 15; i++){
+        for(int j = 0; j < 20; j++)
+            if(i % 2 == 0){
+                reverseTab[i][j] = i * 20 + (19 - j);
+            }else{
+                reverseTab[i][j] = i * 20 + j;
+            }
+    }
+}
+void color_that_case(int ligne, int colonne, int R, int G, int B){
+    strip.setPixelColor(reverseTab[ligne][colonne], R, G,B);
+  }
 boolean sens[300]; 
 unsigned long debut;
 
@@ -16,18 +63,19 @@ int translateur = 30;
 
 void setup(){
   strip.begin();
-  randomSeed(analogRead(0));
+  /*randomSeed(analogRead(0));
   for(int i = 0; i < 300; ++i){
     uint8_t t = random(0, 256);
     strip.setPixelColor(i, t, t, 255);
     sens[i] = random(0, 2) == 0;
-  }
+  }*/
+  initialiser_revser_tab_coin_haut_gauche();
   strip.show();
   debut = millis();
 }
 
 void loop(){
-  int temps = sin((millis() - debut)/float(vitesseVariations)) * multiplicateur + translateur;
+  /*int temps = sin((millis() - debut)/float(vitesseVariations)) * multiplicateur + translateur;
   for(int i = 0; i < 300; ++i){
     uint32_t color = strip.getPixelColor(i) >> 16;
     uint32_t c = color + (sens[i] ? 1 : -1) * random(0, color/proportionCouleur+temps);
@@ -39,7 +87,8 @@ void loop(){
       c = 20;
     }
     strip.setPixelColor(i, c, c, c+80 < 255 ? c+80 : 255);
-  }
+  }*/
+  color_that_case(4,10,0,0,150);
   strip.show();
 }
 
