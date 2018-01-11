@@ -1,11 +1,12 @@
 #include "position.h"
+#include "calcul.h"
 
 Position::Position(int x, int y)
   :m_x(x),m_y(y){
 
 }
 void Position::draw(){
-    //color_that_case(m_x, m_y, 50, 50, 50);
+    color_that_case(m_x, m_y, 50, 50, 50);
 }
 int Position::getX(){
     return m_x;
