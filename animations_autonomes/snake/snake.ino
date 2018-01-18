@@ -1,7 +1,3 @@
-
-
-
-
 #include <StandardCplusplus.h>
 #include <vector>
 //#include <stdlib.h>
@@ -16,6 +12,7 @@ int direction;
 std::vector<Position*> snake;
 Position* fruit = new Position(0,0);
 boolean enCours;
+Adafruit_WS2801 strip;
 
 boolean estDansSerpent(Position* position){
     for(unsigned int i = 0; i < snake.size(); i++)
@@ -68,7 +65,8 @@ void seDeplacer(int dir){
 
 void setup(){
     strip = Adafruit_WS2801(300);
-  
+    strip.begin();
+    
     enCours = true;
     fruit = new Position(rand()%LARGEUR, rand()%HAUTEUR);
     direction = 8;
@@ -86,8 +84,11 @@ void destruct(){
 
 void loop(){
     // TODO: gestion des Ã©vÃ©nements : assigner direction
+    //strip.setPixelColor(0,0,255,0);
+    
     seDeplacer(direction);
     for(unsigned int i = 0; i < snake.size(); i++){
         snake[i]->draw();
+        strip.show();
     }
 }
