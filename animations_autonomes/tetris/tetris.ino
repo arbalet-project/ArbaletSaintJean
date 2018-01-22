@@ -703,7 +703,7 @@ void displayFrame() {    // refreshes the display
   strip.show();
 }
   
-byte gameOverMatrix[6][6*gameOverLength+7];
+byte gameOverMatrix[6][6*gameOverLength+cols-1];
 
 void conbineLetters(int index) {
   if (index==0) {  // gameOverLetters[9][6][6]={G,A,M,E,O,V,E,R,blank};
@@ -728,12 +728,12 @@ void displayTextOverlay(int index) {  // i=0: GAMEOVER;
     while (gameOver==true) {
       for (int n=0; n<6*gameOverLength; n++) {
         if (gameOver==false) return;
-        for (int i=0;i<8;i++) {
+        for (int i=0;i<cols;i++) {
           for (int j=5;j<11;j++) {
             currentMatrix[j][i]=0;
           }
         }  
-        for (int i=0; i<8; i++) {
+        for (int i=0; i<cols; i++) {
           for (int j=0; j<6; j++) {
             if (gameOverMatrix[j][n+i]!=0) {
               currentMatrix[j+5][i]=gameOverMatrix[j][n+i];
