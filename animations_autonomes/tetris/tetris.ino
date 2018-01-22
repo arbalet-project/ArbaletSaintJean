@@ -513,7 +513,7 @@ void checkLinesCleared() {
 }
 
 void checkRestartGame() {
-  if (commands[9]==true) {  //reinitialize all variables
+  if (commands[8]==true) {  //reinitialize all variables
     for (int i=0;i<cols;i++) {
       for (int j=0; j<rows; j++) currentMatrix[j][i]=0;
     }
@@ -521,7 +521,7 @@ void checkRestartGame() {
     numberOfLinesCleared=0;
     
     // reinitilize variables
-    gameRunning=false;
+    gameRunning=true;
     gameOver=false;
     disableMove=false;
     pieceDropping=false;
