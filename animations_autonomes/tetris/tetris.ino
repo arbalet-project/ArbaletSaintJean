@@ -422,19 +422,19 @@ boolean generatePiece() {  //updates: currentPiece, currentMatrix, currentPieceR
   for (int i=0; i<4; i++) {
     for (int j=0; j<2; j++) {
       if (piecesGenerated[pieceIndex][j+2][i]>0) {
-        if (currentMatrix[j][i+2]<0) return false;
+        if (currentMatrix[j][i+8]<0) return false;
       }
     }
   }
   for (int i=0; i<4; i++) {
     for (int j=0; j<2; j++) {
       if (piecesGenerated[pieceIndex][j+2][i]>0) {
-        currentMatrix[j][i+2]=piecesGenerated[pieceIndex][j+2][i];
+        currentMatrix[j][i+8]=piecesGenerated[pieceIndex][j+2][i];
       }
     }
   }
   currentPieceRow = -2;
-  currentPieceCol = 2;
+  currentPieceCol = 8;
   switch (pieceIndex) {
     case 0:
       currentPieceIndex=0;
