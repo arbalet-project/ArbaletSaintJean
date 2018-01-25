@@ -12,7 +12,7 @@ int direction;
 std::vector<Position*> snake;
 Position* fruit;
 boolean enCours;
-Adafruit_WS2801 strip;
+Adafruit_WS2801 *strip;
 
 boolean estDansSerpent(Position* position){
     for(unsigned int i = 0; i < snake.size(); i++)
@@ -67,13 +67,13 @@ void seDeplacer(int dir){
 
 void setup(){
   
-    strip = Adafruit_WS2801(300);
-    strip.begin();
+    strip = new Adafruit_WS2801(300);
+    strip->begin();
       for (int i=0;i<300;i++)
     {
-    strip.setPixelColor(i,0,0,0);
+    strip->setPixelColor(i,0,0,0);
     }
-    strip.show();
+    strip->show();
     
     enCours = true;
    // nouveauFruit();
@@ -92,12 +92,12 @@ void destruct(){
 
 void loop(){
     // TODO: gestion des Ã©vÃ©nements : assigner direction
-    //strip.setPixelColor(0,0,255,0);
+    //strip->setPixelColor(0,0,255,0);
     
     //seDeplacer(direction);
     for(unsigned int i = 0; i < snake.size(); i++){
         snake[i]->draw();
-        strip.show();
+        strip->show();
         delay(500);
     }
 }
