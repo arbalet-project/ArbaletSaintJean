@@ -16,12 +16,14 @@ class Position{
     public:
          Position(int x, int y);
          void draw();
+         void drawFruit();
          bool equals(Position* p);
          int getX();
          int getY();
          void setX(int x);
          void setY(int y);
          Position* head(int dir);
+         void eteindreCase();
 };
 
 #endif

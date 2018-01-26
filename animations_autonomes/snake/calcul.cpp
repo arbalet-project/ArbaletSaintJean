@@ -42,6 +42,6 @@ int calculer(int ligne, int colonne){
 
 }
 void color_that_case(int ligne, int colonne, int R, int G, int B){
-    strip.setPixelColor(calculer(ligne,colonne), R, G, B);
+    strip->setPixelColor(calculer(ligne,colonne), R, G, B);
 
 }

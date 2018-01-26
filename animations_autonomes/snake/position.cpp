@@ -8,6 +8,14 @@ Position::Position(int x, int y)
 void Position::draw(){
     color_that_case(m_x, m_y, 50, 50, 50);
 }
+
+void Position::drawFruit(){
+    color_that_case(m_x, m_y, 10, 100, 10);
+}
+
+void Position::eteindreCase(){
+    color_that_case(m_x, m_y, 0, 0, 0);
+}
 int Position::getX(){
     return m_x;
 }

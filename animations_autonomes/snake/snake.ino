@@ -22,9 +22,12 @@ boolean estDansSerpent(Position* position){
 }
 
 void nouveauFruit(){
+
     do{
-        fruit = new Position(rand()%LARGEUR, rand()%HAUTEUR);
+      free(fruit);
+      fruit = new Position(random(LARGEUR), random(HAUTEUR));
     }while(estDansSerpent(fruit));
+    fruit->drawFruit();
     
     
 }
@@ -40,9 +43,12 @@ void verifAjouter(){
 
 // Tout dÃ©caler vers la droite
 void decaler(){
-    for(int i = snake.size()-2; i >= 0; i--){
-        snake[i+1] = snake[i];
-    }
+  
+  //switch(dir){  
+  //snake.push_back(new Position());
+  for(int i=snake.size()-2;i>=0;i--){
+    snake[i+1]=snake[i];
+  }
 }
 
 
@@ -60,13 +66,20 @@ void seDeplacer(int dir){
         head->setY(HAUTEUR-1);
     if(head->getY() >= TAILLE)
         head->setY(0);
+
+
     snake[0] = snake[1]->head(dir);
+    Position* queue = *snake.end();
+    queue->eteindreCase();
+    
+    /*free(snake.end());
+    snake.erase(snake.end());*/
 }
 
 
 
 void setup(){
-  
+    randomSeed(analogRead(A0));
     strip = new Adafruit_WS2801(300);
     strip->begin();
       for (int i=0;i<300;i++)
@@ -76,8 +89,8 @@ void setup(){
     strip->show();
     
     enCours = true;
-   // nouveauFruit();
-    direction = 8;
+    nouveauFruit();
+    direction = 2;
 
     snake.push_back(new Position(LARGEUR/2-2, HAUTEUR/2));
     snake.push_back(new Position(LARGEUR/2-1, HAUTEUR/2));
@@ -94,10 +107,11 @@ void loop(){
     // TODO: gestion des Ã©vÃ©nements : assigner direction
     //strip->setPixelColor(0,0,255,0);
     
-    //seDeplacer(direction);
+    
     for(unsigned int i = 0; i < snake.size(); i++){
         snake[i]->draw();
         strip->show();
         delay(500);
     }
+    seDeplacer(direction);
 }

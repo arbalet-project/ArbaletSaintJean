@@ -3,7 +3,7 @@
 
 #include <Adafruit_WS2801.h>
 
-extern Adafruit_WS2801 strip;
+extern Adafruit_WS2801* strip;
 
 int calculer(int ligne, int colonne);
 
