@@ -24,36 +24,37 @@ int place_mot;
 String list[LISTE];
 const int TAILLE_MAX_COMMANDE = 10;*/
 
-int directionSnake = -1;
+// 2 pour le haut
+// 1 vers la droite
+// 0 vers la gauche
 
-//0 pour en haut a droite
-// 1 pour en haut a gauche 
-// 2 pour en bas a gauche 
-// 3 pour en bas a droite 
+int directionSnake;
+
 std::list <Position*> snakeStockage;
 std::list <Position*> snakeUtil;
 Position* fruit;
 
 boolean estDansSerpent(Position* pos){
     Position* elem;
-      int i =0;
-      boolean dedans =false;
-    while(i<snakeStockage.size() && dedans == false)
+    int i =0;
+    boolean dedans =false;
+    while(i<snakeUtil.size() && dedans == false)
+    {
+     elem = snakeUtil.back();
+     snakeUtil.pop_back();
+     snakeStockage.push_front(elem);
+     if(elem->equals(pos))
+        dedans=true;
+     i++;
+    
+  }
+    
+    i=0;
+    for (i;i<snakeStockage.size();i++)
     {
      elem = snakeStockage.back();
      snakeStockage.pop_back();
-     snakeUtil.push_front(elem);
-     if(elem == pos)
-        dedans=true;
-            i++;
-    }
-    
-    i=0;
-    for (i;i<snakeUtil.size();i++)
-    {
-     elem = snakeUtil.front();
-     snakeUtil.pop_front();
-     snakeStockage.push_back(elem);
+     snakeUtil.push_back(elem);
     }
     
    return dedans;
@@ -77,25 +78,28 @@ void decaler(int directionSnake){
   int y_front = snakeUtil.front()->getY();
   int x_back =  snakeUtil.back()->getX();
   int y_back = snakeUtil.back()->getY();
+  
+  color_that_case(snakeUtil.front()->getX(),snakeUtil.front()->getY(),255,0,0);// front ne doit renvoyer qu'une seul case non ?
+  //color_that_case(snakeUtil.front()->getX()-1,snakeUtil.front()->getY()-1,0,255,0);
   color_that_case(x_back,y_back,0,0,0);
   snakeUtil.pop_back();
   
   
   switch(directionSnake){
-        case 0:
-          if((y_front+1) <= HAUTEUR){
+        case 0://TODO encore beuguer
+          if((y_front+1) <= LARGEUR){
             snakeUtil.push_front(new Position(x_front,y_front+1));
           }
           else{
-            
+            snakeUtil.push_front(new Position(x_front,0));
           }
           break;
-        case 1:
+        case 1: //TODO meme beug décalage de une case vers le bas  
         if((y_front+1) > 0){
             snakeUtil.push_front(new Position(x_front,y_front-1));
           }
           else{
-            //fonction à créer pour arrêrer le snake
+            snakeUtil.push_front(new Position(x_front,LARGEUR));
           }
           break;
         case 2:
@@ -103,16 +107,16 @@ void decaler(int directionSnake){
             snakeUtil.push_front(new Position(x_front+1,y_front));
           }
           else{
-            //fonction à créer pour arrêrer le snake
+            snakeUtil.push_front(new Position(0,y_front));
           }
           x_front++;
           break;
         case 3:
-        if((y_front+1) > 0){
+        if((x_front+1) > 0){
             snakeUtil.push_front(new Position(x_front-1,y_front));
           }
           else{
-            //fonction à créer pour arrêrer le snake
+            snakeUtil.push_front(new Position(HAUTEUR,y_front));
           }
           break;
       }
@@ -123,24 +127,40 @@ void decaler(int directionSnake){
   //snake.erase(snake.size()-1);*/
 }
 
+void deplacer()
+{
+  decaler(directionSnake);
+  if (estDansSerpent(fruit)){
+    snakeUtil.push_front(new Position(snakeUtil.front()->getY(),snakeUtil.front()->getX()-snakeUtil.size()+1));//Beug téléportation après avoir mangé un fruit en (2,7)
+    
+    nouveauFruit();
+  }
+  
+}
+
 
 void setup()  
 {  
     randomSeed(analogRead(A0));
     strip = new Adafruit_WS2801(300);
     strip->begin();
+    
   for (int i=0;i<300;i++)
   {
     strip->setPixelColor(i,0,0,0);
   }
   
-  directionSnake = 2; 
+  directionSnake = 0;
+  
   snakeUtil.push_front(new Position(HAUTEUR/2-2,LARGEUR/2));
   snakeUtil.front()->draw();
     snakeUtil.push_front(new Position(HAUTEUR/2-1,LARGEUR/2));
   snakeUtil.front()->draw();
     snakeUtil.push_front(new Position(HAUTEUR/2,LARGEUR/2));
   snakeUtil.front()->draw();
+  
+  fruit = new Position(HAUTEUR/2,0);
+  
   
   /*list[0] = "Right_u";
   list[1] = "Left_u";
@@ -248,6 +268,8 @@ void loop()
     
    Serial1.flush();       
   }*/
-  decaler(directionSnake);
+  fruit->drawFruit();
+   
+  deplacer();
   strip->show();  
 }  
