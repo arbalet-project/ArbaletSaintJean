@@ -27,6 +27,7 @@ const int TAILLE_MAX_COMMANDE = 10;*/
 // 2 pour le haut
 // 1 vers la droite
 // 0 vers la gauche
+// 3 vers le bas
 
 int directionSnake;
 
@@ -38,11 +39,13 @@ boolean estDansSerpent(Position* pos){
     Position* elem;
     int i =0;
     boolean dedans =false;
+    
     while(i<snakeUtil.size() && dedans == false)
     {
      elem = snakeUtil.back();
      snakeUtil.pop_back();
      snakeStockage.push_front(elem);
+     
      if(elem->equals(pos))
         dedans=true;
      i++;
@@ -63,6 +66,7 @@ boolean estDansSerpent(Position* pos){
 void nouveauFruit(){
 
     do{
+      fruit->eteindreCase();
       free(fruit);
       fruit = new Position(random(LARGEUR), random(HAUTEUR));
     }while(estDansSerpent(fruit));
@@ -72,70 +76,65 @@ void nouveauFruit(){
 }
 
 void decaler(int directionSnake){
-  //switch(dir){  
-  //snake.push_back(new Position());
-  int x_front = snakeUtil.front()->getX();
-  int y_front = snakeUtil.front()->getY();
-  int x_back =  snakeUtil.back()->getX();
-  int y_back = snakeUtil.back()->getY();
   
-  color_that_case(snakeUtil.front()->getX(),snakeUtil.front()->getY(),255,0,0);// front ne doit renvoyer qu'une seul case non ?
+  unsigned char x_front = snakeUtil.front()->getX();
+  unsigned char y_front = snakeUtil.front()->getY();
+  unsigned char x_back =  snakeUtil.back()->getX();
+  unsigned char y_back = snakeUtil.back()->getY();
+    
+  color_that_case(snakeUtil.front()->getX(),snakeUtil.front()->getY(),100,20,0);// front ne doit renvoyer qu'une seul case non ?
   //color_that_case(snakeUtil.front()->getX()-1,snakeUtil.front()->getY()-1,0,255,0);
   color_that_case(x_back,y_back,0,0,0);
   snakeUtil.pop_back();
   
-  
   switch(directionSnake){
-        case 0://TODO encore beuguer
-          if((y_front+1) <= LARGEUR){
-            snakeUtil.push_front(new Position(x_front,y_front+1));
-          }
-          else{
-            snakeUtil.push_front(new Position(x_front,0));
-          }
+        case 0://gauche
+          snakeUtil.push_front(new Position(x_front,(y_front+1)%(LARGEUR+1)));
           break;
-        case 1: //TODO meme beug décalage de une case vers le bas  
-        if((y_front+1) > 0){
-            snakeUtil.push_front(new Position(x_front,y_front-1));
-          }
-          else{
+        case 1: //droite
+          if(y_front-1 < 0)
+          {
             snakeUtil.push_front(new Position(x_front,LARGEUR));
           }
-          break;
-        case 2:
-        if((x_front+1 <= LARGEUR)){
-            snakeUtil.push_front(new Position(x_front+1,y_front));
-          }
           else{
-            snakeUtil.push_front(new Position(0,y_front));
+            snakeUtil.push_front(new Position(x_front,y_front-1));
           }
-          x_front++;
           break;
-        case 3:
-        if((x_front+1) > 0){
-            snakeUtil.push_front(new Position(x_front-1,y_front));
-          }
-          else{
+        case 2://haut
+          snakeUtil.push_front(new Position((x_front+1)%(HAUTEUR+1),y_front));
+          break;
+        case 3://bas
+          if(x_front-1 < 0)
+          {
             snakeUtil.push_front(new Position(HAUTEUR,y_front));
           }
+          else{
+            snakeUtil.push_front(new Position(x_front-1,y_front));
+          }
+          
           break;
       }
-      
-    color_that_case(snakeUtil.front()->getX(),snakeUtil.front()->getY(),255,255,255);
+    
+    
+    color_that_case(snakeUtil.front()->getX(),snakeUtil.front()->getY(),255,0,0);
     delay(500);
-  //free(queue);
-  //snake.erase(snake.size()-1);*/
 }
 
 void deplacer()
 {
-  decaler(directionSnake);
+  
   if (estDansSerpent(fruit)){
-    snakeUtil.push_front(new Position(snakeUtil.front()->getY(),snakeUtil.front()->getX()-snakeUtil.size()+1));//Beug téléportation après avoir mangé un fruit en (2,7)
-    
+    Serial.print(snakeUtil.back()->getX());
+    Serial.print(" ");
+    Serial.println(snakeUtil.back()->getY()+1);
+      delay(600);
+      
+    snakeUtil.push_front(new Position(snakeUtil.front()->getX(),snakeUtil.front()->getY()-1));//Beug téléportation après avoir mangé un fruit en (2,7) si la direction est 0;
+
     nouveauFruit();
   }
-  
+  delay(600);
+  decaler(directionSnake);
 }
 
 
@@ -150,16 +149,16 @@ void setup()
     strip->setPixelColor(i,0,0,0);
   }
   
-  directionSnake = 0;
+  directionSnake = 1;
   
-  snakeUtil.push_front(new Position(HAUTEUR/2-2,LARGEUR/2));
+  snakeUtil.push_front(new Position(HAUTEUR/2-2,LARGEUR/2-1));
   snakeUtil.front()->draw();
-    snakeUtil.push_front(new Position(HAUTEUR/2-1,LARGEUR/2));
+  snakeUtil.push_front(new Position(HAUTEUR/2-1,LARGEUR/2-1));
   snakeUtil.front()->draw();
-    snakeUtil.push_front(new Position(HAUTEUR/2,LARGEUR/2));
+  snakeUtil.push_front(new Position(HAUTEUR/2,LARGEUR/2-1));
   snakeUtil.front()->draw();
   
-  fruit = new Position(HAUTEUR/2,0);
+  fruit = new Position(HAUTEUR/2,5);
   
   
   /*list[0] = "Right_u";
@@ -187,12 +186,12 @@ void setup()
   delay(500);  
   Serial.println("Starting Bluetooth on Serial1...");  
   // Configuration du bluetooth  
- 
-  Serial1.begin(9600);  //57600
-  delay(500);  
-  Serial1.print("AT+NAMEArbalet_St_Jean");
-  delay(500);  
-  Serial.println("Bluetooth is up!");  */
+ */
+  Serial.begin(9600);  //57600
+  delay(50);  
+  //Serial1.print("AT+NAMEArbalet_St_Jean");
+  //delay(500);  
+  //Serial.println("Bluetooth is up!"); 
 }  
 
 /*int trouver(String list[]){
@@ -269,7 +268,6 @@ void loop()
    Serial1.flush();       
   }*/
   fruit->drawFruit();
-   
   deplacer();
   strip->show();  
 }  
