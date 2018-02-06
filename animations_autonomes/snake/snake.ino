@@ -30,48 +30,30 @@ const int TAILLE_MAX_COMMANDE = 10;*/
 // 3 vers le bas
 
 int directionSnake;
+char* positionspossibles = (char*)malloc(300);
 
-std::list <Position*> snakeStockage;
 std::list <Position*> snakeUtil;
-Position* fruit;
 
-boolean estDansSerpent(Position* pos){
-    Position* elem;
-    int i =0;
-    boolean dedans =false;
-    
-    while(i<snakeUtil.size() && dedans == false)
-    {
-     elem = snakeUtil.back();
-     snakeUtil.pop_back();
-     snakeStockage.push_front(elem);
-     
-     if(elem->equals(pos))
-        dedans=true;
-     i++;
-    
-  }
-    
-    i=0;
-    for (i;i<snakeStockage.size();i++)
-    {
-     elem = snakeStockage.back();
-     snakeStockage.pop_back();
-     snakeUtil.push_back(elem);
-    }
-    
-   return dedans;
-}
 
 void nouveauFruit(){
-
-    do{
-      fruit->eteindreCase();
-      free(fruit);
-      fruit = new Position(random(LARGEUR), random(HAUTEUR));
-    }while(estDansSerpent(fruit));
-    fruit->drawFruit();
-    
+    Serial.println("NOUVEAU FRUIT");
+    int alea = random(TAILLE - snakeUtil.size());
+    int i = 0;
+    int compteur = 0;
+    boolean fini = false;
+    while(compteur <= alea && i < TAILLE && !fini){
+      if(positionspossibles[i] == 's'){
+        
+      }else if(compteur == alea){
+        positionspossibles[i] = 'f';
+        strip->setPixelColor(alea, 0, 255, 0);
+        fini = true;
+      }
+      else{
+        compteur ++;
+      }
+      i++;
+    }
     
 }
 
@@ -82,9 +64,12 @@ void decaler(int directionSnake){
   unsigned char x_back =  snakeUtil.back()->getX();
   unsigned char y_back = snakeUtil.back()->getY();
     
-  color_that_case(snakeUtil.front()->getX(),snakeUtil.front()->getY(),100,20,0);// front ne doit renvoyer qu'une seul case non ?
+  //color_that_case(x_front,y_front,100,20,0);// front ne doit renvoyer qu'une seul case non ?
   //color_that_case(snakeUtil.front()->getX()-1,snakeUtil.front()->getY()-1,0,255,0);
   color_that_case(x_back,y_back,0,0,0);
+  positionspossibles[calculer(x_back,y_back)] = 'r';
+  // il faut liberer la memoire
+  free(snakeUtil.back());
   snakeUtil.pop_back();
   
   switch(directionSnake){
@@ -115,24 +100,28 @@ void decaler(int directionSnake){
           break;
       }
     
+    x_front = snakeUtil.front()->getX();
+    y_front = snakeUtil.front()->getY();
     
-    color_that_case(snakeUtil.front()->getX(),snakeUtil.front()->getY(),255,0,0);
+    
+    if(positionspossibles[calculer(x_front,y_front)] == 'f'){
+      positionspossibles[calculer(x_front,y_front)] = 's';
+      strip->setPixelColor(calculer(x_front,y_front), 0, 0, 0);
+      snakeUtil.push_back(new Position(snakeUtil.back()->getX(),snakeUtil.back()->getY()+1));
+      positionspossibles[calculer(snakeUtil.back()->getX(),snakeUtil.back()->getY())] = 's';
+      color_that_case(snakeUtil.back()->getX(),snakeUtil.back()->getY(),255,10,0);
+      nouveauFruit();
+    }
+    else{
+      positionspossibles[calculer(x_front,y_front)] = 's';
+    
+    }
+    color_that_case(x_front,y_front,255,0,0);
     delay(500);
 }
 
 void deplacer()
 {
-  
-  if (estDansSerpent(fruit)){
-    Serial.print(snakeUtil.back()->getX());
-    Serial.print(" ");
-    Serial.println(snakeUtil.back()->getY()+1);
-      delay(600);
-      
-    snakeUtil.push_front(new Position(snakeUtil.front()->getX(),snakeUtil.front()->getY()-1));//Beug téléportation après avoir mangé un fruit en (2,7) si la direction est 0;
-
-    nouveauFruit();
-  }
   delay(600);
   decaler(directionSnake);
 }
@@ -140,6 +129,9 @@ void deplacer()
 
 void setup()  
 {  
+    Serial.begin(9600);  //57600
+    delay(50);
+  
     randomSeed(analogRead(A0));
     strip = new Adafruit_WS2801(300);
     strip->begin();
@@ -148,17 +140,32 @@ void setup()
   {
     strip->setPixelColor(i,0,0,0);
   }
+  for(int i = 0; i < 300; i++){
+    positionspossibles[i] = 'r';
+  }
+  
+  
+  positionspossibles[calculer(HAUTEUR/2,5)] = 'f';
+  strip->setPixelColor(calculer(HAUTEUR/2,5), 0, 255, 0);
+  
   
   directionSnake = 1;
+  Position* p1 = new Position(HAUTEUR/2-2,LARGEUR/2-1);
+  Position* p2 = new Position(HAUTEUR/2-1,LARGEUR/2-1);
+  Position* p3 = new Position(HAUTEUR/2,LARGEUR/2-1);
   
-  snakeUtil.push_front(new Position(HAUTEUR/2-2,LARGEUR/2-1));
+  snakeUtil.push_front(p1);
   snakeUtil.front()->draw();
-  snakeUtil.push_front(new Position(HAUTEUR/2-1,LARGEUR/2-1));
+  snakeUtil.push_front(p2);
   snakeUtil.front()->draw();
-  snakeUtil.push_front(new Position(HAUTEUR/2,LARGEUR/2-1));
+  snakeUtil.push_front(p3);
+  positionspossibles[calculer(p1->getX(),p1->getY())] = 's';
+  
+  positionspossibles[calculer(p2->getX(),p2->getY())] = 's';
+  positionspossibles[calculer(p3->getX(),p3->getY())] = 's';
   snakeUtil.front()->draw();
   
-  fruit = new Position(HAUTEUR/2,5);
+ 
   
   
   /*list[0] = "Right_u";
@@ -187,8 +194,7 @@ void setup()
   Serial.println("Starting Bluetooth on Serial1...");  
   // Configuration du bluetooth  
  */
-  Serial.begin(9600);  //57600
-  delay(50);  
+  
   //Serial1.print("AT+NAMEArbalet_St_Jean");
   //delay(500);  
   //Serial.println("Bluetooth is up!"); 
@@ -267,7 +273,6 @@ void loop()
     
    Serial1.flush();       
   }*/
-  fruit->drawFruit();
   deplacer();
   strip->show();  
 }  
