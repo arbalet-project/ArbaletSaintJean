@@ -271,3 +271,27 @@ void loop()
   deplacer();
   strip->show();  
 }  
+/*
+    Position elem;
+    list<Position> snakeUtil;
+    char positionspossibles[300];
+    int compteur = 0;
+    // dans le setup il faut tout initialisr à 0
+    
+     * for(int i; i < positionspossibles.lenght(); i++){
+     *      positionspossibles[i] = 0;
+     *
+     * 
+     * dans le setup on met les cases allumées en char dans le tableaux 
+     * ensuite dans la fonction deplacer grace a la fonction calculer 
+     * des que on allume une case on change son char dans le tableaux et idem quand on éteint
+     * pour séléectionner un nouveaux fruit on fait un 
+     * while(nontrouver et pas la bonne position)
+     * enfin il faudra pensé à cloisonner le random du fruit à 300 - taille du serpent 
+     * 
+     * 
+     * 
+     * 
+     * 
+     * 
+     * }*/
