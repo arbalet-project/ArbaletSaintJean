@@ -2,19 +2,15 @@
 #include <EEPROM.h>
 #include "Adafruit_WS2801.h"
 #include "SPI.h"
-#include <Ethernet.h>
-#include <EthernetUdp.h>
 #include <StandardCplusplus.h>
 #include <list>
 
 #define DEBUG_SERIAL 1      
-#define PROTOCOL_VERSION 2  // Protocol version over UDP
-#define WS2801_GREEN 22
-#define WS2801_YELLOW 23
+#define PROTOCOL_VERSION 2  // Protocol for Live mode
 
-Adafruit_WS2801 strip = Adafruit_WS2801(300, WS2801_YELLOW, WS2801_GREEN);
+const int NUM_PIXELS = 300;
 const unsigned long DURATION_ANIMATION_MS = 120000UL;
-const unsigned long LIVE_TIMEOUT_MS = 5000UL;
+const unsigned long LIVE_TIMEOUT_MS = 16000UL;
 int NUM_ANIMATIONS = 4;
 unsigned long last_animation_switch = 0;
 unsigned long lastKeyPressed = millis();
@@ -25,65 +21,57 @@ boolean isGame = false;
 boolean isLiveControl = false;
 char sens_tableau = '3';
 
+Adafruit_WS2801 strip = Adafruit_WS2801(NUM_PIXELS);
 
-/*********************************************************************** ETHERNET *************************************************************/
+/*********************************************************************** SERIAL LIVE *************************************************************/
 
-#define UDP_DGRAM_SIZE 470        // Lower than 508 https://stackoverflow.com/questions/14993000/the-most-reliable-and-efficient-udp-packet-size
-#define NUM_PIXELS_PER_DGRAM 150  // Sending 150*(r, g, b) = 450 Bytes in each datagram
+#define NUM_PIXELS_PER_DGRAM 15  // Sending 19*(r, g, b) Bytes in each frame
+#define HEADER_SIZE 6
 #define PROTOCOL_RECEIVE_FRAME 'F'
 #define PROTOCOL_SEND_DISCOVERY 'H'
 
-byte mac[] = {0xDE, 0xAD, 0xBE, 0x0, 0x33, 0x47};
-IPAddress ip(192, 168, 1, 50);
-unsigned int localPort = 33407;
-
-byte packetBuffer[UDP_DGRAM_SIZE];
 byte liveR, liveG, liveB, subFrameId;
-EthernetUDP Udp;
+const int FRAME_SIZE = NUM_PIXELS_PER_DGRAM*3 + HEADER_SIZE + 1;  // The extra 1 is the subframe ID
+byte frameBuffer[FRAME_SIZE];
 
-int readUDPFrame() {
-  int packetSize = Udp.parsePacket();
+int readSerialFrame() {
+  int packetSize = Serial.readBytes(frameBuffer, FRAME_SIZE);
   if (packetSize) {
-    Udp.read(packetBuffer, UDP_DGRAM_SIZE);
 
-    const byte HEADER_SIZE = 6;
     byte header[HEADER_SIZE] = {'A', 'R', 'B', 'A', (char)PROTOCOL_VERSION, (char)PROTOCOL_RECEIVE_FRAME};
     for (int i = 0; i < HEADER_SIZE; ++i) {
-      if(header[i] != packetBuffer[i]) {
+      if(header[i] != frameBuffer[i]) {
         #if DEBUG_SERIAL
+        Serial.print(i); Serial.print("/"); Serial.print(header[i]); Serial.print("/"); Serial.print(frameBuffer[i]);
         Serial.println("Ignoring LIVE pixel: Incorrect header or protocol version");
         #endif
         return 0;
       }
     }
-    
-    if(isLiveControl) { // No need to parse the rest of the datagram if we're not in live mode
-      byte packet_index = HEADER_SIZE;
-      subFrameId = packetBuffer[packet_index++];
-      int offset = subFrameId == 0? 0:NUM_PIXELS_PER_DGRAM;
-  
-      for (int i = 0; i < NUM_PIXELS_PER_DGRAM; ++i) {
-        liveR = packetBuffer[packet_index++];
-        liveG = packetBuffer[packet_index++];
-        liveB = packetBuffer[packet_index++];
-        strip.setPixelColor(i + offset, liveR, liveG, liveB);
-        #if DEBUG_SERIAL
-          //Serial.print(i + offset); Serial.print(" ");
-          //Serial.print(liveR); Serial.print(" ");
-          //Serial.print(liveG); Serial.print(" ");
-          //Serial.println(liveB);
-        #endif
-      }
-      if(subFrameId > 0) strip.show();
-    }
+    return packetSize;
   }
-  return packetSize;
 }
 
-void setupEthernet() {
-  Ethernet.begin(mac, ip);
-  Udp.begin(localPort);
+void updateLiveframe() {
+    byte packet_index = HEADER_SIZE;
+    subFrameId = frameBuffer[packet_index++];
+    int offset = subFrameId == 0? 0:NUM_PIXELS_PER_DGRAM;
+
+    for (int i = 0; i < NUM_PIXELS_PER_DGRAM; ++i) {
+      liveR = frameBuffer[packet_index++];
+      liveG = frameBuffer[packet_index++];
+      liveB = frameBuffer[packet_index++];
+      strip.setPixelColor(i + offset, liveR, liveG, liveB);
+      #if DEBUG_SERIAL
+        //Serial.print(i + offset); Serial.print(" ");
+        //Serial.print(liveR); Serial.print(" ");
+        //Serial.print(liveG); Serial.print(" ");
+        //Serial.println(liveB);
+      #endif
+    }
+    if(subFrameId == (NUM_PIXELS/NUM_PIXELS_PER_DGRAM - 1)) strip.show();
 }
+
 
 /***************************************************************** OUTILS DE CONVERSION *******************************************************/
 
@@ -238,7 +226,7 @@ void fadeInRoueDesCouleurs() {
 }
 
 void setupRoueDesCouleurs()  {
-    hue = (float*)malloc(300*sizeof(float));
+    hue = (float*)malloc(NUM_PIXELS*sizeof(float));
     
     for (int i = 0; i < strip.numPixels(); i++)
       {
@@ -286,7 +274,7 @@ void fadeInAuHasard() {
 }
 
 void setupAuHasard()  {
-    hue = (float*)malloc(300*sizeof(float));
+    hue = (float*)malloc(NUM_PIXELS*sizeof(float));
    for (int i = 0; i < strip.numPixels(); i++)  //Initialise tout le mur dans une meme couleur pour que toutes les leds soient allumées
     {
       hue[i]=random(250,300)/360.0;
@@ -322,9 +310,9 @@ float *hue_expos;
 float hue1, hue2;
 
 void setupLineaire(){
-  value = (int*)malloc(300*sizeof(int));
-  sens = (int*)malloc(300*sizeof(int));
-  hue_expos = (float*)malloc(300*sizeof(float));
+  value = (int*)malloc(NUM_PIXELS*sizeof(int));
+  sens = (int*)malloc(NUM_PIXELS*sizeof(int));
+  hue_expos = (float*)malloc(NUM_PIXELS*sizeof(float));
   
   hue1 = random(0, 10)/10.0;
   hue2 = random(0, 10)/10.0;
@@ -843,7 +831,7 @@ void displayFrame() {
 }
 /***************************************************************** SNAKE **************************************************************/
 
-#define TAILLE 300
+#define TAILLE NUM_PIXELS
 #define LARGEUR 19
 #define HAUTEUR 14
 #define T_HAUT 8
@@ -911,7 +899,7 @@ void nouveauFruit(){
     
 }
 void tourner_couleur(){
-  for(int i = 0; i < 300; i++){
+  for(int i = 0; i < NUM_PIXELS; i++){
     if(positionspossibles[i] == 's'){
       strip.setPixelColor(i, 0, 0, 0);
       strip.show();
@@ -920,7 +908,7 @@ void tourner_couleur(){
   
 }
 void tourner_rouge(){
-  for(int j = 0; j < 300; j++){
+  for(int j = 0; j < NUM_PIXELS; j++){
     if(positionspossibles[j] == 's'){
       strip.setPixelColor(j, 255, 25, 0);
       strip.show();
@@ -1053,16 +1041,16 @@ void deplacer()
 void setupSnake()  
 {  
   isGame = true;
-  positionspossibles = (char*)malloc(300);
+  positionspossibles = (char*)malloc(NUM_PIXELS);
   compteur = 500;
   gameRunning = true;
   gameSnakeIntro = true;
   
-  for (int i=0;i<300;i++)
+  for (int i=0;i<NUM_PIXELS;i++)
   {
     strip.setPixelColor(i,0,0,0);
   }
-  for(int i = 0; i < 300; i++){
+  for(int i = 0; i < NUM_PIXELS; i++){
     positionspossibles[i] = 'r';
   }
   
@@ -1141,13 +1129,12 @@ void setup() {
 
 #if DEBUG_SERIAL
   while(!Serial);
-  Serial.begin(9600);
+  Serial.begin(115200);
   Serial.println("Booting");
   Serial.print("Nombre d'utilisateurs: ");
   Serial.println(read_int_EEPROM(0));
 #endif
   setupBluetooth();
-  setupEthernet();
   setupAnimation(0);
 }
 
@@ -1235,7 +1222,16 @@ void loop() {
 
   // Check LIVE Control first
   // During live control, the sequenced animation is not destroyed
-  int udp_frame_size = readUDPFrame();
+  int serial_frame_size, read_size = 0;
+  serial_frame_size = Serial.available();
+  
+  if(serial_frame_size > 0) {
+     read_size = readSerialFrame();
+     if (read_size != FRAME_SIZE) { Serial.print(read_size); Serial.print(" "); Serial.print(serial_frame_size);
+        Serial.println("Received a corrupted frame, frame skipped!");
+        read_size = 0;
+     }
+  }
 
   if(isLiveControl && millis() > lastLiveFrameReceived + LIVE_TIMEOUT_MS) {
     // Leaving LIVE Control mode
@@ -1246,18 +1242,20 @@ void loop() {
     last_animation_switch = 0; // Force animation switch
     isGame = false;
   }
-  else if(udp_frame_size > 0) {
+  else if(read_size > 0) {
     if(!isLiveControl) {
       // Entering LIVE Control mode
       #if DEBUG_SERIAL
       Serial.println("Received Live Control request...");
       #endif
       fadeOut();
+      while(Serial.available() > 0) Serial.read();   // Clear the input buffer
       #if DEBUG_SERIAL
       Serial.println("Switching mode to LIVE now");
       #endif
-    } 
+    }
     isLiveControl = true;
+    updateLiveframe();
     lastLiveFrameReceived = millis();
   }
 

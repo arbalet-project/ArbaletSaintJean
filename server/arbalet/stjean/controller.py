@@ -5,8 +5,8 @@ from struct import pack
 from time import sleep
 from artnet import dmx
 from os import path
+from serial import Serial
 import struct
-import socket
 import sys
 import json
 
@@ -15,7 +15,7 @@ class Wall(Thread):
     PROTOCOL_VERSION = 2
     PROTOCOL_RECEIVE_FRAME = b'F'
     PROTOCOL_SEND_DISCOVERY = b'H'
-    NUM_PIXELS_PER_DGRAM = 150
+    NUM_PIXELS_PER_DGRAM = 15
 
     def __init__(self, hardware_ip, hardware_port, hardware=True, simulator=True):
         Thread.__init__(self)
@@ -30,7 +30,7 @@ class Wall(Thread):
         with open(config_path) as f:
             self.config = json.load(f)
 
-        self.socket = None
+        self.serial = None
         self.simulator = None
         self.rate = int(self.config['refresh_rate'])
 
@@ -38,7 +38,7 @@ class Wall(Thread):
             self.simulator = Simulator(self.model)
 
         if hardware:
-            self.socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+            self.serial = Serial("/dev/ttyACM0", self.config["baudrate"], timeout=1)
 
     def __getitem__(self, row):
         return self.model.__getitem__(row)
@@ -53,9 +53,11 @@ class Wall(Thread):
                 self.model[row, col] = r, g, b
 
     def update(self):
-        if self.socket is not None:
+        from random import randint
+        if self.serial is not None:
             with self.model:
-                frame = [[0]*3*self.NUM_PIXELS_PER_DGRAM for subframe in range(int(self.num_pixels / self.NUM_PIXELS_PER_DGRAM))]
+                num_subframes = round(self.num_pixels / self.NUM_PIXELS_PER_DGRAM)
+                frame = [[0]*3*self.NUM_PIXELS_PER_DGRAM for subframe in range(num_subframes)]
                 for row in range(self.model.height):
                     for col in range(self.model.width):
                         num_pixel = self.config['mapping'][row][col]
@@ -64,17 +66,28 @@ class Wall(Thread):
                         r, g, b = map(lambda x: min(255, max(0, int(x))), self.model[row][col])
                         frame[subframe_id][num_pixel_in_subframe*3] = r
                         frame[subframe_id][num_pixel_in_subframe*3+1] = g
-                        frame[subframe_id][num_pixel_in_subframe*3+2] = b
+                        frame[subframe_id][num_pixel_in_subframe*3+2] = randint(0, 255)
 
                 for subframe_id, subframe in enumerate(frame):
                     packet = bytes([subframe_id]) + bytes(subframe)
-                    self.socket.sendto(self.header + packet, (self.ip, self.port))
+                    self.serial.write(self.header + packet)
+            print("Frame update")
+            self.update_serial_input()
 
         if self.simulator is not None:
             self.simulator.update() 
 
+    def update_serial_input(self):
+        if self.serial:
+            while self.serial.in_waiting > 0:
+                print(self.serial.in_waiting, "Bytes response available:")
+                print(self.serial.readline())
 
     def run(self):
+        for i in range(5, 0, -1):
+            self.update_serial_input()
+            print("Waiting {} sec... ".format(i))
+            sleep(1)
         self.running = True
         try:
             while self.running:
@@ -85,8 +98,8 @@ class Wall(Thread):
 
     def close(self):
         self.running = None
-        if self.socket is not None:
-            self.socket.close()
+        if self.serial is not None:
+            self.serial.close()
         if self.simulator is not None:
             self.simulator.close()
 
